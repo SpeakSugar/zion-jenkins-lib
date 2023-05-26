@@ -4,7 +4,7 @@ import com.speaksugar.jenkins.global.GlobalVars
 import com.speaksugar.jenkins.selenium.model.NodeLockReqDto
 import com.speaksugar.jenkins.selenium.model.NodeLockResDto
 import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
 import org.apache.http.HttpResponse
 import org.apache.http.client.methods.HttpDelete
 import org.apache.http.client.methods.HttpPost
@@ -31,7 +31,7 @@ class SfService {
             httpPost.setEntity(new StringEntity(JsonOutput.toJson(nodeLockReqDto), ContentType.APPLICATION_JSON))
             HttpResponse response = httpClient.execute(httpPost)
             String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8")
-            return new JsonSlurper().parseText(responseBody) as NodeLockResDto
+            return new JsonSlurperClassic().parseText(responseBody) as NodeLockResDto
         } finally {
             httpClient.close()
         }
