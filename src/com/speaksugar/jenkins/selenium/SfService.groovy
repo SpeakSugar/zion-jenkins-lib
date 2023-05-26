@@ -33,7 +33,6 @@ class SfService {
             return new JsonSlurper().parseText(responseBody) as NodeLockResDto
         } finally {
             httpClient.close()
-            return null
         }
     }
 
