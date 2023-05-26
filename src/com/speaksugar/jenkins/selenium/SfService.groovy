@@ -6,6 +6,7 @@ import com.speaksugar.jenkins.selenium.model.NodeLockResDto
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.apache.http.HttpResponse
+import org.apache.http.client.methods.HttpDelete
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.StringEntity
@@ -31,6 +32,17 @@ class SfService {
             HttpResponse response = httpClient.execute(httpPost)
             String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8")
             return new JsonSlurper().parseText(responseBody) as NodeLockResDto
+        } finally {
+            httpClient.close()
+        }
+    }
+
+    String deleteNodeLock(String uuid) {
+        CloseableHttpClient httpClient = HttpClients.createDefault()
+        try {
+            HttpDelete httpDelete = new HttpDelete("${this.url}/nodeLock/${uuid}")
+            HttpResponse response = httpClient.execute(httpDelete)
+            return EntityUtils.toString(response.getEntity(), "UTF-8")
         } finally {
             httpClient.close()
         }
