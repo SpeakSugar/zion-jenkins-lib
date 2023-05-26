@@ -6,13 +6,7 @@
 
     <groupId>com.speaksugar.jenkins</groupId>
     <artifactId>zion-jenkins-lib</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-
-    <properties>
-        <maven.compiler.source>18</maven.compiler.source>
-        <maven.compiler.target>18</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <version>0.0.2-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
@@ -40,6 +34,19 @@
         </repository>
     </repositories>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>dins-public</id>
+            <name>Dins Corporate Repository</name>
+            <url>http://nexus-xmn02.lab.nordigy.ru/nexus/content/groups/public</url>
+        </pluginRepository>
+
+        <pluginRepository>
+            <id>repo.bodar.com</id>
+            <url>https://nexus-xmn02.lab.nordigy.ru/nexus/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencies>
         <dependency>
             <groupId>org.jenkins-ci.main</groupId>
@@ -59,5 +66,33 @@
             <version>4.5.13</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Groovy 编译插件 -->
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>1.7.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sources>
+                        <source>
+                            <directory>${project.basedir}/src/main/java</directory>
+                            <includes>
+                                <include>**/*.groovy</include>
+                            </includes>
+                        </source>
+                    </sources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

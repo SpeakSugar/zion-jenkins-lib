@@ -8,6 +8,6 @@ Jenkins 共享库.
 <dependency>
     <groupId>com.speaksugar.jenkins</groupId>
     <artifactId>zion-jenkins-lib</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
 </dependency>
 ```
