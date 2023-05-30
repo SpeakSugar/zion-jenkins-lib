@@ -6,7 +6,7 @@
 
     <groupId>com.speaksugar.jenkins</groupId>
     <artifactId>zion-jenkins-lib</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
@@ -65,6 +65,15 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.13</version>
         </dependency>
+
+        <!-- junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- junit -->
     </dependencies>
 
     <build>
