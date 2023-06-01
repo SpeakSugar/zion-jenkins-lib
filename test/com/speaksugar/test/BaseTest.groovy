@@ -32,7 +32,9 @@ class BaseTest {
         List<Object> results = ThreadUtil.execute([{ println('fxuk') }, {
             println('fxxxxk')
             throw new Exception('fxxk e')
-        }, { println('fxqk') }, { println('fxak') }, { println('fxwk') }])
+        }, { println('fxqk')
+            throw new Exception('fxxk e')}, { println('fxak')
+            throw new Exception('fxxk e')}, { println('fxwk') }])
         println("result size = ${results.size()}")
         println("result value = ${results[0]}")
     }
