@@ -4,18 +4,7 @@ import com.speaksugar.jenkins.blockbuster.model.CiReqDto
 import com.speaksugar.jenkins.blockbuster.model.CiResDto
 import com.speaksugar.jenkins.global.GlobalVars
 import com.speaksugar.jenkins.util.HttpUtil
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurperClassic
-import org.apache.http.HttpResponse
-import org.apache.http.client.methods.HttpDelete
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.client.methods.HttpPost
 import org.apache.http.client.utils.URIBuilder
-import org.apache.http.entity.ContentType
-import org.apache.http.entity.StringEntity
-import org.apache.http.impl.client.CloseableHttpClient
-import org.apache.http.impl.client.HttpClients
-import org.apache.http.util.EntityUtils
 
 class BlockBusterService {
 
