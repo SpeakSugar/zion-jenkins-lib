@@ -13,6 +13,8 @@ class NodeLockResDto {
         Boolean hasAudio
         Boolean hasCamera
         String mark
+        String user
+        String password
     }
 
 }
