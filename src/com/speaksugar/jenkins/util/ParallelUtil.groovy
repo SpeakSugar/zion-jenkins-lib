@@ -12,9 +12,10 @@ class ParallelUtil {
         List<Exception> exceptions = new CopyOnWriteArrayList<>()
         Map<String, Closure> jobMap = [:]
         for (int i = 0; i < closures.size(); i++) {
+            Closure cb= closures.get(i)
             jobMap.put("job ${i}", {
                 try {
-                    results.add(closures.get(i)())
+                    results.add(cb())
                 } catch (Exception e) {
                     exceptions.add(e)
                 }
