@@ -17,8 +17,10 @@ class BlockBusterService {
     }
 
     void batchDeleteCi(String uri) {
-        List<CiResDto> ciResDtoList = this.getCis(uri, "1")
-        ciResDtoList.each { it -> this.deleteCi(it.id) }
+        List<CiResDto> sub_ciResDtoList = this.getCis(uri, "1")
+        sub_ciResDtoList.each { it -> this.deleteCi(it.id) }
+        List<CiResDto> ciResDtoList = this.getCis(uri, "0")
+        this.deleteCi(ciResDtoList.get(0).id)
     }
 
     List<CiResDto> getCis(String uri = null, String scope = null, String filter = null) {
