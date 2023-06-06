@@ -34,7 +34,7 @@ class CmdServerService {
             String kill_cmd = "kill -9 \$(ps -ef | grep rc.pkg | awk '{print \$2}' | awk 'NR==1')"
             HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
             HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 300e3])
-            Thread.sleep(5000)
+            Thread.sleep(10000)
             HttpUtil.post("${this.url}/cmd", [cmd: kill_cmd])
         }
         if (OS.WIN == os) {

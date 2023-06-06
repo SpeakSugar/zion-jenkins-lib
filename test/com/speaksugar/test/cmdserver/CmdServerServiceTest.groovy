@@ -22,7 +22,7 @@ class CmdServerServiceTest {
 
     @Test
     void installRcDT_mac_intel() {
-        CmdServerService cmdServerService = new CmdServerService("http://10.32.35.186:7777")
+        CmdServerService cmdServerService = new CmdServerService("http://10.32.35.175:7777")
         cmdServerService.installRcDT([
                 mac_intel_url: "https://electron.fiji.gliprc.com/downloads-all/stage/23.2.20/rc/7237-stage-23-2-20-noupdate-52d7d2d6a/for-downloading/RingCentral-23.2.20-7237-noupdate-mac-x64.pkg"
         ] as RcDTReqDto)
@@ -37,6 +37,14 @@ class CmdServerServiceTest {
     }
 
     @Test
+    void installRcDT_win_intel() {
+        CmdServerService cmdServerService = new CmdServerService("http://10.32.35.220:7777")
+        cmdServerService.installRcDT([
+                win_intel_url: "https://electron.fiji.gliprc.com/downloads-all/stage/23.2.20/rc/7237-stage-23-2-20-noupdate-52d7d2d6a/for-downloading/RingCentral-23.2.20-7237-noupdate-win.msi"
+        ] as RcDTReqDto)
+    }
+
+    @Test
     void installRcDT_win_arm() {
         CmdServerService cmdServerService = new CmdServerService("http://10.32.62.94:7777")
         cmdServerService.installRcDT([
@@ -46,7 +54,7 @@ class CmdServerServiceTest {
 
     @Test
     void uninstallRcDT_win() {
-        CmdServerService cmdServerService = new CmdServerService("http://10.32.62.94:7777")
+        CmdServerService cmdServerService = new CmdServerService("http://10.32.35.220:7777")
         cmdServerService.uninstallRcDT("RingCentral")
     }
 }
