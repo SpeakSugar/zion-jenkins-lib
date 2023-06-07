@@ -57,4 +57,10 @@ class CmdServerServiceTest {
         CmdServerService cmdServerService = new CmdServerService("http://10.32.35.220:7777")
         cmdServerService.uninstallRcDT("RingCentral")
     }
+
+    @Test
+    void cleanTmpFile() {
+        CmdServerService cmdServerService = new CmdServerService("http://10.32.63.97:7777")
+        cmdServerService.cleanTmpFile()
+    }
 }

@@ -55,7 +55,7 @@ try {
 
     // 更新 blockbuster api 
     BlockBusterService blockBusterService = new BlockBusterService("http://itop-xmn.lab.nordigy.ru:1389")
-    blockBusterService.batchDeleteCi('xxx/xxx/xxx') // 删除这个 uri 下所有子项
+    blockBusterService.batchDeleteCi('xxx/xxx/xxx') // 删除这个 uri 和 uri 下所有子项
     for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
         blockBusterService.addCi([
                 // 需要把 lockRes 转成 ciReqDto 对象
@@ -86,7 +86,14 @@ try {
     sfService.deleteNodeLock(nodeLockResDto.uuid)
 } catch (Exception e) {
     println(e)
-
+    
+    // 删除临时文件目录
+    if (nodeLockResDto != null) {
+        for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
+            cmdServerService.cleanTmpFile()
+        }
+    }
     // job abort 或者发生异常时, 释放资源锁
     if (nodeLockResDto != null) {
         sfService.deleteNodeLock(nodeLockResDto.uuid)

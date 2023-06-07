@@ -66,4 +66,32 @@ class CmdServerService {
         }
     }
 
+    void cleanTmpFile() {
+        String os = getOs()
+        if (OS.MAC == os) {
+            String cmd_1 = "rm -rf \$TMPDIR/.com.google.Chrome.*"
+            String cmd_2 = "rm -rf \$TMPDIR/scoped_*"
+            String cmd_3 = "rm -rf \$TMPDIR/debug_log_*"
+            String cmd = "${cmd_1} && ${cmd_2} && ${cmd_3}"
+            HttpUtil.post("${this.url}/cmd", [cmd: cmd])
+
+        }
+        if (OS.WIN == os) {
+            String cmd_1 = "for /F \"delims=\" %i in ('dir /B /AD \"%tmp%\\scoped_*\"') do rmdir /S /Q \"%tmp%\\%i\""
+            String cmd_2 = "for /F \"delims=\" %i in ('dir /B /AD \"%tmp%\\.com.google.Chrome.*\"') do rmdir /S /Q \"%tmp%\\%i\""
+            String cmd_3 = "del /S /Q \"%tmp%\\debug_log_*\""
+            try {
+                HttpUtil.post("${this.url}/cmd", [cmd: cmd_1])
+            } catch (Exception ignored) {
+                // ignore when not scoped_* dir
+            }
+            try {
+                HttpUtil.post("${this.url}/cmd", [cmd: cmd_2])
+            } catch (Exception ignored) {
+                // ignore when not .com.google.Chrome.* dir
+            }
+            HttpUtil.post("${this.url}/cmd", [cmd: cmd_3])
+        }
+    }
+
 }
