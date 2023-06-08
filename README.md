@@ -82,6 +82,14 @@ try {
 
     // 执行 e2e 框架, 输出报告等...
 
+    // 删除临时文件目录
+    if (nodeLockResDto != null) {
+        for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
+            cmdServerService.cleanTmpFile()
+        }
+    }
+    
     // 释放资源锁
     sfService.deleteNodeLock(nodeLockResDto.uuid)
 } catch (Exception e) {
