@@ -83,14 +83,18 @@ class CmdServerService {
             try {
                 HttpUtil.post("${this.url}/cmd", [cmd: cmd_1])
             } catch (Exception ignored) {
-                // ignore when not scoped_* dir
+                // ignore when not scoped_* dir or capture by process
             }
             try {
                 HttpUtil.post("${this.url}/cmd", [cmd: cmd_2])
             } catch (Exception ignored) {
-                // ignore when not .com.google.Chrome.* dir
+                // ignore when not .com.google.Chrome.* dir or capture by process
             }
-            HttpUtil.post("${this.url}/cmd", [cmd: cmd_3])
+            try {
+                HttpUtil.post("${this.url}/cmd", [cmd: cmd_3])
+            } catch (Exception ignored) {
+                // ignore when capture by process
+            }
         }
     }
 
