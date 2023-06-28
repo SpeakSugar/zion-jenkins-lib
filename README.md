@@ -62,18 +62,7 @@ try {
         ])
     }
 
-    GlobalVars.jenkins = this // 非常重要的赋值 
-    // kill Chrome, RingCentral 相关进程
-    List<Closure> kill_closures = []
-    for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
-        kill_closures.add({
-            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
-            cmdServerService.killProcess('Chrome')
-            cmdServerService.killProcess("${AppName}")
-        })
-    }
-    ParallelUtil.execute(kill_closures)
-
+    GlobalVars.jenkins = this // 非常重要的赋值
     // 安装 Jupiter Desktop
     List<Closure> install_closures = []
     for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
@@ -92,7 +81,18 @@ try {
     ParallelUtil.execute(install_closures)
 
     // 执行 e2e 框架, 输出报告等...
-
+    
+    // kill Chrome, RingCentral 相关进程
+    List<Closure> kill_closures = []
+    for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+        kill_closures.add({
+            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
+            cmdServerService.killProcess('Chrome')
+            cmdServerService.killProcess("${AppName}")
+        })
+    }
+    ParallelUtil.execute(kill_closures)
+    
     // 删除临时文件目录
     if (nodeLockResDto != null) {
         for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
@@ -105,6 +105,17 @@ try {
     sfService.deleteNodeLock(nodeLockResDto.uuid)
 } catch (Exception e) {
     println(e)
+
+    // kill Chrome, RingCentral 相关进程
+    List<Closure> kill_closures = []
+    for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+        kill_closures.add({
+            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
+            cmdServerService.killProcess('Chrome')
+            cmdServerService.killProcess("${AppName}")
+        })
+    }
+    ParallelUtil.execute(kill_closures)
     
     // 删除临时文件目录
     if (nodeLockResDto != null) {
