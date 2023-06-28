@@ -31,7 +31,7 @@ class HttpUtil {
             }
             try {
                 return new JsonSlurperClassic().parseText(responseBody)
-            } catch (JsonException | IllegalArgumentException e) {
+            } catch (Exception e) {
                 return responseBody
             }
         } finally {

@@ -41,6 +41,7 @@ class CmdServerService {
             // windows need uninstall app before
             // windows uninstall app no need appName
             uninstallRcDT(null)
+            killProcess("RingCentral.msi")
             String appUrl = arch == "intel" ? rcDTReqDto.win_intel_url : rcDTReqDto.win_arm_url
             String download_cmd = "curl -s \"${appUrl}\" > %USERPROFILE%\\Downloads\\RingCentral.msi"
             String install_cmd = "msiexec /i \"%USERPROFILE%\\Downloads\\RingCentral.msi\""
@@ -62,6 +63,41 @@ class CmdServerService {
                 HttpUtil.post("${this.url}/cmd", [cmd: cmd])
             } catch (Exception ignored) {
                 // msiexec /x "%USERPROFILE%\Downloads\RingCentral.msi" /qr will cause e when app has uninstalled.
+            }
+        }
+    }
+
+    void killProcess(String pName) {
+        String os = getOs()
+        if (OS.MAC == os) {
+            String cmd = "ps -ef | grep ${pName} | grep -v grep | awk '{print \$2}'"
+            String result = HttpUtil.post("${this.url}/cmd", [cmd: cmd])
+            List<String> pids = result.split('\n')
+            for (String pid : pids) {
+                String kill_cmd = "kill -9 ${pid}"
+                try {
+                    HttpUtil.post("${this.url}/cmd", [cmd: kill_cmd])
+                } catch (Exception ignored) {
+                    // throw e when pid no exist
+                }
+            }
+        }
+        if (OS.WIN == os) {
+            String cmd = "wmic process get processId,commandline | findstr /c:\"${pName}\" | findstr /v findstr"
+            String result = ""
+            try {
+                result = HttpUtil.post("${this.url}/cmd", [cmd: cmd])
+            } catch (Exception ignored) {
+                // throw e when no pName exist
+            }
+            List<String> pids = result.findAll(/ [0-9]+/).stream().map({it -> it.trim() }).toList()
+            for (String pid : pids) {
+                String kill_cmd = "taskkill /T /F /PID ${pid}"
+                try {
+                    HttpUtil.post("${this.url}/cmd", [cmd: kill_cmd])
+                } catch (Exception ignored) {
+                    // throw e when pid no exist
+                }
             }
         }
     }

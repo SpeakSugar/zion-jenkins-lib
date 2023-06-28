@@ -62,10 +62,22 @@ try {
         ])
     }
 
-    // 安装 Jupiter Desktop
-    List<Closure> closures = []
+    GlobalVars.jenkins = this // 非常重要的赋值 
+    // kill Chrome, RingCentral 相关进程
+    List<Closure> kill_closures = []
     for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
-        closures.add({
+        kill_closures.add({
+            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
+            cmdServerService.killProcess('Chrome')
+            cmdServerService.killProcess("${AppName}")
+        })
+    }
+    ParallelUtil.execute(kill_closures)
+
+    // 安装 Jupiter Desktop
+    List<Closure> install_closures = []
+    for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+        install_closures.add({
             CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
             RcDTReqDto rcDTReqDto = [
                     mac_arm_url  : "",
@@ -77,8 +89,7 @@ try {
             cmdServerService.installRcDT(rcDTReqDto)
         })
     }
-    GlobalVars.jenkins = this
-    ParallelUtil.execute(closures)
+    ParallelUtil.execute(install_closures)
 
     // 执行 e2e 框架, 输出报告等...
 
