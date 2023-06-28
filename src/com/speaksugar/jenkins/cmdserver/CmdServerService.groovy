@@ -90,9 +90,9 @@ class CmdServerService {
             } catch (Exception ignored) {
                 // throw e when no pName exist
             }
-            List<String> pids = result.findAll(/ [0-9]+/).stream().map({it -> it.trim() }).toList()
+            List<String> pids = result.findAll(/ [0-9]+/)
             for (String pid : pids) {
-                String kill_cmd = "taskkill /T /F /PID ${pid}"
+                String kill_cmd = "taskkill /T /F /PID ${pid.trim()}"
                 try {
                     HttpUtil.post("${this.url}/cmd", [cmd: kill_cmd])
                 } catch (Exception ignored) {
