@@ -38,9 +38,9 @@ class CmdServerServiceTest {
 
     @Test
     void installRcDT_win_intel() {
-        CmdServerService cmdServerService = new CmdServerService("http://10.32.35.117:7777")
+        CmdServerService cmdServerService = new CmdServerService("http://10.32.56.196:7777")
         cmdServerService.installRcDT([
-                win_intel_url: "https://electron.fiji.gliprc.com/downloads-all/develop-branches/23.3.10/rc/7673-develop-noupdate-31854b120/for-downloading/RingCentral-23.3.10-7673-noupdate-win.msi"
+                win_intel_url: "https://electron.fiji.gliprc.com/downloads-all/stage/23.3.10/rc/7774-stage-23-3-10-noupdate-a6e3fc696/for-downloading/RingCentral-23.3.10-7774-noupdate-win.msi"
         ] as RcDTReqDto)
     }
 
@@ -54,7 +54,7 @@ class CmdServerServiceTest {
 
     @Test
     void killProcess() {
-        CmdServerService cmdServerService = new CmdServerService("http://127.0.0.1:7777")
+        CmdServerService cmdServerService = new CmdServerService("http://10.32.56.196:7777")
         // cmdServerService.killProcess("RingCentral.msi")
         cmdServerService.killProcess("RingCentral")
     }
