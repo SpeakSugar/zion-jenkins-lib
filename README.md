@@ -66,8 +66,9 @@ try {
     // 安装 Jupiter Desktop
     List<Closure> install_closures = []
     for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+        // 注意: 由于闭包的特性, 这行代码必须写在闭包外
+        CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
         install_closures.add({
-            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
             RcDTReqDto rcDTReqDto = [
                     mac_arm_url  : "",
                     mac_intel_url: "",
@@ -85,8 +86,8 @@ try {
     // kill Chrome, RingCentral 相关进程
     List<Closure> kill_closures = []
     for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+        CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
         kill_closures.add({
-            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
             cmdServerService.killProcess('Chrome')
             cmdServerService.killProcess("${AppName}")
         })
@@ -109,8 +110,8 @@ try {
     // kill Chrome, RingCentral 相关进程
     List<Closure> kill_closures = []
     for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+        CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
         kill_closures.add({
-            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
             cmdServerService.killProcess('Chrome')
             cmdServerService.killProcess("${AppName}")
         })
