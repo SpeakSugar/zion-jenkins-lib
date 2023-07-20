@@ -4,6 +4,11 @@
 
 Jenkins 共享库.
 
+## Requirement
+```
+jdk 17 或以上
+```
+
 ## Usage
 
 ```xml
