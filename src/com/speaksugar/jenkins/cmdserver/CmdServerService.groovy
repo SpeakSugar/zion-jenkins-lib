@@ -29,9 +29,11 @@ class CmdServerService {
         String arch = getArch()
         if (OS.MAC == os) {
             String appUrl = arch == "intel" ? rcDTReqDto.mac_intel_url : rcDTReqDto.mac_arm_url
+            String rm_cmd = "sudo rm -rf ~/Downloads/rc.pkg"
             String download_cmd = "curl -s \"${appUrl}\" > ~/Downloads/rc.pkg"
             String install_cmd = "sudo installer -verbose -pkg ~/Downloads/rc.pkg -target /"
             String kill_cmd = "kill -9 \$(ps -ef | grep rc.pkg | awk '{print \$2}' | awk 'NR==1')"
+            HttpUtil.post("${this.url}/cmd", [cmd: rm_cmd])
             HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
             HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 300e3])
             Thread.sleep(10000)
