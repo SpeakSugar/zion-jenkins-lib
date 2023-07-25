@@ -10,6 +10,7 @@ class NodeLockReqDto {
         String name
         String os
         String arch
+        String version
         String mark
         Integer count
     }

@@ -10,6 +10,7 @@ class NodeLockResDto {
         String name
         String os
         String arch
+        String version
         Boolean hasAudio
         Boolean hasCamera
         String mark
