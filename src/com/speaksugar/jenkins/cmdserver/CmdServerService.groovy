@@ -44,6 +44,7 @@ class CmdServerService {
             // windows uninstall app no need appName
             uninstallRcDT(null)
             killProcess("RingCentral.msi")
+            killProcess("RingCentral.exe")
             String appUrl = arch == "intel" ? rcDTReqDto.win_intel_url : rcDTReqDto.win_arm_url
             String download_cmd = "curl -s \"${appUrl}\" > %USERPROFILE%\\Downloads\\RingCentral.msi"
             String install_cmd = "msiexec /i \"%USERPROFILE%\\Downloads\\RingCentral.msi\""
