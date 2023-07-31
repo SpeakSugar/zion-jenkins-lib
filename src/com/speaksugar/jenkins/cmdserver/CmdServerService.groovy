@@ -35,7 +35,7 @@ class CmdServerService {
             String kill_cmd = "kill -9 \$(ps -ef | grep rc.pkg | awk '{print \$2}' | awk 'NR==1')"
             HttpUtil.post("${this.url}/cmd", [cmd: rm_cmd])
             HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
-            HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 300e3])
+            HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 100e3])
             Thread.sleep(10000)
             HttpUtil.post("${this.url}/cmd", [cmd: kill_cmd])
         }
@@ -49,7 +49,13 @@ class CmdServerService {
             String download_cmd = "curl -s \"${appUrl}\" > %USERPROFILE%\\Downloads\\RingCentral.msi"
             String install_cmd = "msiexec /i \"%USERPROFILE%\\Downloads\\RingCentral.msi\""
             HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
-            HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 300e3])
+            try {
+                HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 50e3])
+            } catch (Exception ignored) {
+                HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
+                Thread.sleep(100000)
+                HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 50e3])
+            }
         }
 
     }
