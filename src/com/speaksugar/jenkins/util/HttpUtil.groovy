@@ -18,11 +18,16 @@ import org.apache.http.util.EntityUtils
 
 class HttpUtil {
 
-    static Object post(String url, Object data) {
+    static Object post(String url, Object data, token=null) {
         CloseableHttpClient httpClient = HttpClients.createDefault()
         try {
             HttpPost httpPost = new HttpPost(url)
+
+            httpPost.addHeader("Content-Type", "application/json")
+            httpPost.addHeader("Authorization", "Bearer ${token}")
+
             httpPost.setEntity(new StringEntity(JsonOutput.toJson(data), ContentType.APPLICATION_JSON))
+
             HttpResponse response = httpClient.execute(httpPost)
             int statusCode = response.getStatusLine().statusCode
             String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8")
