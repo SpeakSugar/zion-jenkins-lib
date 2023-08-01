@@ -2,9 +2,16 @@ package com.speaksugar.test.cmdserver
 
 import com.speaksugar.jenkins.cmdserver.CmdServerService
 import com.speaksugar.jenkins.cmdserver.model.RcDTReqDto
+import com.speaksugar.jenkins.util.HttpUtil
 import org.junit.Test
 
 class CmdServerServiceTest {
+
+    @Test
+    void cmdsTest() {
+        def result = HttpUtil.post("http://10.32.47.163:7777/cmd", [cmd: 'echo %USERPROFILE%', timeout: 300e3])
+        println(result)
+    }
 
     @Test
     void getOs() {
