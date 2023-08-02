@@ -48,12 +48,13 @@ class CmdServerService {
             String appUrl = arch == "intel" ? rcDTReqDto.win_intel_url : rcDTReqDto.win_arm_url
             String download_cmd = "curl -s \"${appUrl}\" > %USERPROFILE%\\Downloads\\RingCentral.msi"
             String install_cmd = "msiexec /i \"%USERPROFILE%\\Downloads\\RingCentral.msi\""
-            HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
             try {
+                HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 50e3])
             } catch (Exception ignored) {
                 HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
                 Thread.sleep(100000)
+                HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 50e3])
             }
         }
