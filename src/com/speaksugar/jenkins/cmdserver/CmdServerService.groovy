@@ -5,6 +5,7 @@ import com.speaksugar.jenkins.cmdserver.model.RcDTReqDto
 import com.speaksugar.jenkins.global.GlobalVars
 import com.speaksugar.jenkins.util.HttpUtil
 import org.apache.http.client.utils.URIBuilder
+import com.speaksugar.jenkins.util.RetryUtil
 
 class CmdServerService {
 
@@ -54,7 +55,10 @@ class CmdServerService {
             } catch (Exception ignored) {
                 HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
                 Thread.sleep(100000)
-                HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
+
+                RetryUtil.retry({
+                    HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
+                }, 3, 60000)
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 50e3])
             }
         }
