@@ -38,7 +38,11 @@ class CmdServerService {
             HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
             HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 100e3])
             Thread.sleep(10000)
-            HttpUtil.post("${this.url}/cmd", [cmd: kill_cmd])
+            try {
+                HttpUtil.post("${this.url}/cmd", [cmd: kill_cmd])
+            } catch (Exception ignored) {
+                // sometimes can't open app after installed
+            }
         }
         if (OS.WIN == os) {
             // windows need uninstall app before
