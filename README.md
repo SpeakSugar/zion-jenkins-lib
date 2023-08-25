@@ -87,31 +87,10 @@ try {
     ParallelUtil.execute(install_closures)
 
     // 执行 e2e 框架, 输出报告等...
-    
-    // kill Chrome, RingCentral 相关进程
-    List<Closure> kill_closures = []
-    for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
-        CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
-        kill_closures.add({
-            cmdServerService.killProcess('Chrome')
-            cmdServerService.killProcess("${AppName}")
-        })
-    }
-    ParallelUtil.execute(kill_closures)
-    
-    // 删除临时文件目录
-    if (nodeLockResDto != null) {
-        for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
-            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
-            cmdServerService.cleanTmpFile()
-        }
-    }
-    
-    // 释放资源锁
-    sfService.deleteNodeLock(nodeLockResDto.uuid)
+
 } catch (Exception e) {
     println(e)
-
+} finally {
     // kill Chrome, RingCentral 相关进程
     List<Closure> kill_closures = []
     for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
@@ -122,17 +101,25 @@ try {
         })
     }
     ParallelUtil.execute(kill_closures)
-    
+
     // 删除临时文件目录
     if (nodeLockResDto != null) {
-        for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
-            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
-            cmdServerService.cleanTmpFile()
+        try {
+            for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+                CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
+                cmdServerService.cleanTmpFile()
+            }
+        } catch (e) {
+            println("cleanTmpFile failed")
         }
     }
     // job abort 或者发生异常时, 释放资源锁
     if (nodeLockResDto != null) {
-        sfService.deleteNodeLock(nodeLockResDto.uuid)
+        try {
+            sfService.deleteNodeLock(nodeLockResDto.uuid)
+        } catch (e) {
+            println("deleteNodeLock ${nodeLockResDto.uuid} failed")
+        }
     }
 }
 ```
