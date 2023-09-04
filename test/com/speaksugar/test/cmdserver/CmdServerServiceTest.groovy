@@ -22,16 +22,16 @@ class CmdServerServiceTest {
 
     @Test
     void getArch() {
-        CmdServerService cmdServerService = new CmdServerService("http://10.32.59.112:7777")
+        CmdServerService cmdServerService = new CmdServerService("http://10.74.144.88:7777")
         String arch = cmdServerService.getArch()
         println("arch = ${arch}")
     }
 
     @Test
     void installRcDT_mac_intel() {
-        CmdServerService cmdServerService = new CmdServerService("http://10.32.57.135:7777")
+        CmdServerService cmdServerService = new CmdServerService("http://10.32.47.184:7777")
         cmdServerService.installRcDT([
-                mac_intel_url: "https://electron.fiji.gliprc.com/downloads-all/master/23.2.30/rc/7639-v23.2.30-noupdate-a160c74d2/for-downloading/RingCentral-23.2.30-7639-noupdate-mac-x64.pkg"
+                mac_intel_url: "https://electron.fiji.gliprc.com/downloads-all/master/23.3.20/rc/7989-v23.3.20-noupdate-b14c99227/for-downloading/RingCentral-23.3.20-7989-noupdate-mac-x64.pkg"
         ] as RcDTReqDto)
     }
 
@@ -45,9 +45,9 @@ class CmdServerServiceTest {
 
     @Test
     void installRcDT_win_intel() {
-        CmdServerService cmdServerService = new CmdServerService("http://10.32.56.196:7777")
+        CmdServerService cmdServerService = new CmdServerService("http://10.74.144.88:7777")
         cmdServerService.installRcDT([
-                win_intel_url: "https://electron.fiji.gliprc.com/downloads-all/stage/23.3.10/rc/7774-stage-23-3-10-noupdate-a6e3fc696/for-downloading/RingCentral-23.3.10-7774-noupdate-win.msi"
+                win_intel_url: "https://electron.fiji.gliprc.com/downloads-all/master/23.3.22/rc/8052-v23.3.22-noupdate-4c36dad70/for-downloading/RingCentral-23.3.22-8052-noupdate-win.msi"
         ] as RcDTReqDto)
     }
 

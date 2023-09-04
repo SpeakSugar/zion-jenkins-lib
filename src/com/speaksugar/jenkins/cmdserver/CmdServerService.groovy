@@ -36,7 +36,7 @@ class CmdServerService {
             String kill_cmd = "kill -9 \$(ps -ef | grep rc.pkg | awk '{print \$2}' | awk 'NR==1')"
             HttpUtil.post("${this.url}/cmd", [cmd: rm_cmd])
             HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
-            HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 100e3])
+            HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             Thread.sleep(10000)
             try {
                 HttpUtil.post("${this.url}/cmd", [cmd: kill_cmd])
@@ -47,23 +47,22 @@ class CmdServerService {
         if (OS.WIN == os) {
             // windows need uninstall app before
             // windows uninstall app no need appName
+            killProcess("RingCentral.exe")
             uninstallRcDT(null)
             killProcess("RingCentral.msi")
-            killProcess("RingCentral.exe")
             String appUrl = arch == "intel" ? rcDTReqDto.win_intel_url : rcDTReqDto.win_arm_url
             String download_cmd = "curl -s \"${appUrl}\" > %USERPROFILE%\\Downloads\\RingCentral.msi"
             String install_cmd = "msiexec /i \"%USERPROFILE%\\Downloads\\RingCentral.msi\""
             try {
                 HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
-                HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 50e3])
+                HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             } catch (Exception ignored) {
                 HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
                 Thread.sleep(100000)
-
                 RetryUtil.retry({
                     HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
                 }, 3, 60000)
-                HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 50e3])
+                HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             }
         }
 
