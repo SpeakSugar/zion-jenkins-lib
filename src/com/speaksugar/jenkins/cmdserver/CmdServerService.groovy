@@ -4,8 +4,8 @@ import com.speaksugar.jenkins.cmdserver.constant.OS
 import com.speaksugar.jenkins.cmdserver.model.RcDTReqDto
 import com.speaksugar.jenkins.global.GlobalVars
 import com.speaksugar.jenkins.util.HttpUtil
-import org.apache.http.client.utils.URIBuilder
 import com.speaksugar.jenkins.util.RetryUtil
+import org.apache.http.client.utils.URIBuilder
 
 class CmdServerService {
 
@@ -25,7 +25,7 @@ class CmdServerService {
         return HttpUtil.get(new URIBuilder("${this.url}/arch"))
     }
 
-    void installRcDT(RcDTReqDto rcDTReqDto) {
+    void installRcDT(RcDTReqDto rcDTReqDto, String appName = "RingCentral") {
         String os = getOs()
         String arch = getArch()
         if (OS.MAC == os) {
@@ -47,8 +47,8 @@ class CmdServerService {
         if (OS.WIN == os) {
             // windows need uninstall app before
             // windows uninstall app no need appName
-            killProcess("RingCentral.exe")
-            uninstallRcDT(null)
+            killProcess("${appName}.exe")
+            uninstallRcDT(appName)
             killProcess("RingCentral.msi")
             String appUrl = arch == "intel" ? rcDTReqDto.win_intel_url : rcDTReqDto.win_arm_url
             String download_cmd = "curl -s \"${appUrl}\" > %USERPROFILE%\\Downloads\\RingCentral.msi"
@@ -59,7 +59,7 @@ class CmdServerService {
             } catch (Exception ignored) {
                 HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
                 Thread.sleep(100000)
-                killProcess("RingCentral.exe")
+                killProcess("${appName}.exe")
                 RetryUtil.retry({
                     HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
                 }, 3, 60000)
@@ -76,11 +76,15 @@ class CmdServerService {
             HttpUtil.post("${this.url}/cmd", [cmd: cmd])
         }
         if (OS.WIN == os) {
-            String cmd = "msiexec /x \"%USERPROFILE%\\Downloads\\RingCentral.msi\" /qr"
+            String result = ""
             try {
-                HttpUtil.post("${this.url}/cmd", [cmd: cmd])
-            } catch (Exception ignored) {
-                // msiexec /x "%USERPROFILE%\Downloads\RingCentral.msi" /qr will cause e when app has uninstalled.
+                result = HttpUtil.post("${this.url}/cmd", [cmd: "wmic product get name,IdentifyingNumber | findstr \"${appName}\""])
+            } catch(Exception ignored) {
+                // throw e when no appName exist
+            }
+            List<String> productIds = result.findAll(/\{.+\}/)
+            for (String productId : productIds) {
+                HttpUtil.post("${this.url}/cmd", [cmd: "msiexec /x ${productId} /qr"])
             }
         }
     }

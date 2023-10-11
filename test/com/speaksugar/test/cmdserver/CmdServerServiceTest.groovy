@@ -9,7 +9,7 @@ class CmdServerServiceTest {
 
     @Test
     void cmdsTest() {
-        def result = HttpUtil.post("http://10.32.47.163:7777/cmd", [cmd: 'echo %USERPROFILE%', timeout: 300e3])
+        def result = HttpUtil.post("http://10.32.35.220:7777/cmd", [cmd: 'start /MIN powershell -Command \"echo hello\"', timeout: 300e3])
         println(result)
     }
 

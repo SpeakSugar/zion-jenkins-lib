@@ -81,7 +81,8 @@ try {
                     win_intel_url: ""
 
             ]
-            cmdServerService.installRcDT(rcDTReqDto)
+            String appName = "RingCentral"
+            cmdServerService.installRcDT(rcDTReqDto, appName) // appName 可以不传, 默认为"RingCentral", 当安装其他 brand 时, 需要指定值
         })
     }
     ParallelUtil.execute(install_closures)
