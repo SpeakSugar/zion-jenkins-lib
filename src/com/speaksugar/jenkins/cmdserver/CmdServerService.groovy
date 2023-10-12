@@ -48,18 +48,19 @@ class CmdServerService {
             // windows need uninstall app before
             // windows uninstall app no need appName
             killProcess("${appName}.exe")
-            uninstallRcDT(appName)
             killProcess("RingCentral.msi")
             String appUrl = arch == "intel" ? rcDTReqDto.win_intel_url : rcDTReqDto.win_arm_url
             String download_cmd = "curl -s \"${appUrl}\" > %USERPROFILE%\\Downloads\\RingCentral.msi"
             String install_cmd = "msiexec /i \"%USERPROFILE%\\Downloads\\RingCentral.msi\""
             try {
+                uninstallRcDT(appName)
                 HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             } catch (Exception ignored) {
                 HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
                 Thread.sleep(100000)
                 killProcess("${appName}.exe")
+                uninstallRcDT(appName)
                 RetryUtil.retry({
                     HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
                 }, 3, 60000)
