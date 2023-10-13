@@ -8,4 +8,5 @@ class RcDTReqDto {
     String win_arm_url
     String win_intel_url
 
+    boolean need_download = true
 }

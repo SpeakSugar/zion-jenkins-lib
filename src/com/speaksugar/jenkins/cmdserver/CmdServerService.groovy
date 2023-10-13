@@ -34,8 +34,10 @@ class CmdServerService {
             String download_cmd = "curl -s \"${appUrl}\" > ~/Downloads/rc.pkg"
             String install_cmd = "sudo installer -verbose -pkg ~/Downloads/rc.pkg -target /"
             String kill_cmd = "kill -9 \$(ps -ef | grep rc.pkg | awk '{print \$2}' | awk 'NR==1')"
-            HttpUtil.post("${this.url}/cmd", [cmd: rm_cmd])
-            HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
+            if(rcDTReqDto.need_download) {
+                HttpUtil.post("${this.url}/cmd", [cmd: rm_cmd])
+                HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
+            }
             HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             Thread.sleep(10000)
             try {
@@ -54,16 +56,20 @@ class CmdServerService {
             String install_cmd = "msiexec /i \"%USERPROFILE%\\Downloads\\RingCentral.msi\""
             try {
                 uninstallRcDT(appName)
-                HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
+                 if(rcDTReqDto.need_download) {
+                    HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
+                 }
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             } catch (Exception ignored) {
                 HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
                 Thread.sleep(100000)
                 killProcess("${appName}.exe")
                 uninstallRcDT(appName)
-                RetryUtil.retry({
-                    HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
-                }, 3, 60000)
+                if(rcDTReqDto.need_download) {
+                    RetryUtil.retry({
+                        HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
+                    }, 3, 60000)
+                }
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             }
         }
