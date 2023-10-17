@@ -61,9 +61,14 @@ class CmdServerService {
                  }
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             } catch (Exception ignored) {
-                HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
-                Thread.sleep(100000)
-                RetryUtil.retry({ killProcess("${appName}.exe") }, 3, 60000)
+                try {
+                    HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
+                } catch (Exception ignored2) {
+                    // throw e when win system is shutdown before return msg
+                }
+                RetryUtil.retry({
+                    HttpUtil.post("${this.url}/cmd", [cmd: "echo test"])
+                }, 3, 60000)
                 killProcess("${appName}.exe")
                 uninstallRcDT(appName)
                 if(rcDTReqDto.need_download) {

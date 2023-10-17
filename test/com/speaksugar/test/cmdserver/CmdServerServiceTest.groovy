@@ -9,7 +9,7 @@ class CmdServerServiceTest {
 
     @Test
     void cmdsTest() {
-        def result = HttpUtil.post("http://10.32.47.201:7777/cmd", [cmd: 'pkill XXX', timeout: 300e3])
+        def result = HttpUtil.post("http://10.74.144.88:7777/cmd", [cmd: 'echo test'])
         println(result)
     }
 
