@@ -63,6 +63,7 @@ class CmdServerService {
             } catch (Exception ignored) {
                 HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
                 Thread.sleep(100000)
+                RetryUtil.retry({ killProcess("${appName}.exe") }, 3, 60000)
                 killProcess("${appName}.exe")
                 uninstallRcDT(appName)
                 if(rcDTReqDto.need_download) {
