@@ -33,8 +33,13 @@ class SfServiceTest {
 
     @Test
     void deleteNodeLock() {
-        String uuid = "Jasmine-webinar-test-xxx"
-        SfService sfService = new SfService("http://10.32.57.28:4444")
+        String uuid = "jeffries.yu-169"
+        SfService sfService = new SfService("http://10.74.1.239:5555")
         sfService.deleteNodeLock(uuid)
+    }
+
+    @Test
+    void testContains() {
+        println("In-Webinar-Test-In-Webinar-Chrome-Daily-Jasmine-1698026812733".contains("jeffries.yu-1"))
     }
 }

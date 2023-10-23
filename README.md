@@ -39,6 +39,8 @@ NodeLockResDto nodeLockResDto = null
 SfService sfService = new SfService("${sf_hub_url}")
 
 try {
+    // 释放 lock-by-issue 锁
+    sfService.deleteNodeLock("lock-by-issue")
     // 申请资源锁
     NodeLockReqDto nodeLockReqDto = [
             name: 'xxx', // 必填, 最好和 job 名称相关

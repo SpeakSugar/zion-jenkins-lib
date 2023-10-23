@@ -21,11 +21,21 @@ class SfService {
     }
 
     List<NodeLockResDto> getNodeLock(String uuid) {
-        return HttpUtil.get(new URIBuilder("${this.url}/nodeLock/${uuid}")) as List<NodeLockResDto>
+        if (uuid == null) {
+            return HttpUtil.get(new URIBuilder("${this.url}/nodeLock")) as List<NodeLockResDto>
+        } else {
+            return HttpUtil.get(new URIBuilder("${this.url}/nodeLock/${uuid}")) as List<NodeLockResDto>
+        }
     }
 
     String deleteNodeLock(String uuid) {
-        return HttpUtil.delete(new URIBuilder("${this.url}/nodeLock/${uuid}"))
+        List<NodeLockResDto> nodeLockResDtos = this.getNodeLock(null)
+        for (NodeLockResDto nodeLockResDto : nodeLockResDtos) {
+            if (nodeLockResDto.uuid.contains(uuid)) {
+                HttpUtil.delete(new URIBuilder("${this.url}/nodeLock/${nodeLockResDto.uuid}"))
+            }
+        }
+        return "Delete Success"
     }
 
 }
