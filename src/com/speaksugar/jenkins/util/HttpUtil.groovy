@@ -26,8 +26,9 @@ class HttpUtil {
             httpPost.addHeader("Content-Type", "application/json")
             httpPost.addHeader("Authorization", "Bearer ${token}")
 
-            httpPost.setEntity(new StringEntity(JsonOutput.toJson(data), ContentType.APPLICATION_JSON))
-
+            String data_json = JsonOutput.toJson(data)
+            httpPost.setEntity(new StringEntity(data_json, ContentType.APPLICATION_JSON))
+            println("POST ${url} ${data_json}")
             HttpResponse response = httpClient.execute(httpPost)
             int statusCode = response.getStatusLine().statusCode
             String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8")
