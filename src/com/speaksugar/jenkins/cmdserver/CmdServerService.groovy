@@ -38,7 +38,15 @@ class CmdServerService {
                 HttpUtil.post("${this.url}/cmd", [cmd: rm_cmd])
                 HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
             }
-            HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
+            try {
+                HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
+            } catch(Exception ignored) {
+                HttpUtil.post("${this.url}/cmd", [cmd: 'sudo reboot', timeout: 50e3])
+                RetryUtil.retry({
+                    HttpUtil.post("${this.url}/cmd", [cmd: "echo test"])
+                }, 3, 60000)
+                HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
+            }
             Thread.sleep(10000)
             try {
                 HttpUtil.post("${this.url}/cmd", [cmd: kill_cmd])
