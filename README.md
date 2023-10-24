@@ -39,7 +39,7 @@ NodeLockResDto nodeLockResDto = null
 SfService sfService = new SfService("${sf_hub_url}")
 
 try {
-    // 释放 lock-by-issue 锁
+    // 如果串行跑job时, 需要先释放 lock-by-issue 锁
     sfService.deleteNodeLock("lock-by-issue")
     // 申请资源锁
     NodeLockReqDto nodeLockReqDto = [
