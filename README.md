@@ -67,15 +67,6 @@ try {
     ]
     nodeLockResDto = sfService.createNodeLock(nodeLockReqDto)
 
-    // 更新 blockbuster api 
-    BlockBusterService blockBusterService = new BlockBusterService("http://itop-xmn.lab.nordigy.ru:1389")
-    blockBusterService.batchDeleteCi('xxx/xxx/xxx') // 删除这个 uri 和 uri 下所有子项
-    for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
-        blockBusterService.addCi([
-                // 需要把 lockRes 转成 ciReqDto 对象
-        ])
-    }
-
     // 安装 Jupiter Desktop
     RcDTReqDto rcDTReqDto = [
             mac_arm_url  : "",
@@ -88,6 +79,15 @@ try {
     // 失败机器从申请机器中移出且用 'lock-by-issue-${JOB_NAME}' 锁住
     // "RingCentral" 为 APP_NAME
     nodeLockResDto = JupiterWrapper.installElectron(rcDTReqDto, nodeLockResDto, 3, "RingCentral")
+    
+    // 更新 blockbuster api 
+    BlockBusterService blockBusterService = new BlockBusterService("http://itop-xmn.lab.nordigy.ru:1389")
+    blockBusterService.batchDeleteCi('xxx/xxx/xxx') // 删除这个 uri 和 uri 下所有子项
+    for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+        blockBusterService.addCi([
+                // 需要把 lockRes 转成 ciReqDto 对象
+        ])
+    }
 
     // 执行 e2e 框架, 输出报告等...
     // 如何决定执行线程数? 根据 { nodeLockResDto.list.size() 大小 * 系数 } 得出, 由各个框架自己决定
