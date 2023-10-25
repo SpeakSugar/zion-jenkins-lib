@@ -20,6 +20,10 @@ class SfService {
         return HttpUtil.post("${this.url}/nodeLock", nodeLockReqDto) as NodeLockResDto
     }
 
+    NodeLockResDto updateNodeLock(NodeLockReqDto nodeLockReqDto) {
+        return HttpUtil.post("${this.url}/updateNodeLock", nodeLockReqDto) as NodeLockResDto
+    }
+
     List<NodeLockResDto> getNodeLock(String uuid) {
         if (uuid == null) {
             return HttpUtil.get(new URIBuilder("${this.url}/nodeLock")) as List<NodeLockResDto>

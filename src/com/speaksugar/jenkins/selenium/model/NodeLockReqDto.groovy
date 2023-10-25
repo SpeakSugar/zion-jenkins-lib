@@ -3,6 +3,7 @@ package com.speaksugar.jenkins.selenium.model
 class NodeLockReqDto {
 
     String name
+    String uuid
     List<LockReq> list
 
     static class LockReq {

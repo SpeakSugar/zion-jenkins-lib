@@ -30,15 +30,22 @@ import com.speaksugar.jenkins.blockbuster.model.CiReqDto
 import com.speaksugar.jenkins.blockbuster.model.CiResDto
 import com.speaksugar.jenkins.cmdserver.model.RcDTReqDto
 import com.speaksugar.jenkins.util.ParallelUtil
+import com.speaksugar.jenkins.wrapper.JupiterWrapper
 import org.jenkinsci.plugins.workflow.libs.Library
 
 @Library('zion-jenkins-lib') _
 
+// 全局变量赋值
+GlobalVars.jenkins = this // 非常重要的赋值
+GlobalVars.SF_HUB_URL = "${sf_hub_url}" // sf hub 值, example: sf_hub_url = 'http://127.0.0.1:5555'
+GlobalVars.JOB_NAME = "${job_name}" // jenkins job 名称
+
 NodeLockResDto nodeLockResDto = null
-// example: sf_hub_url = 'http://127.0.0.1:5555'
-SfService sfService = new SfService("${sf_hub_url}")
 
 try {
+
+    SfService sfService = new SfService(GlobalVars.SF_HUB_URL)
+
     // 如果串行跑job时, 需要先释放 lock-by-issue 锁
     sfService.deleteNodeLock("lock-by-issue")
     // 申请资源锁
@@ -69,60 +76,33 @@ try {
         ])
     }
 
-    GlobalVars.jenkins = this // 非常重要的赋值
     // 安装 Jupiter Desktop
-    List<Closure> install_closures = []
-    for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
-        // 注意: 由于闭包的特性, 这行代码必须写在闭包外
-        CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
-        install_closures.add({
-            RcDTReqDto rcDTReqDto = [
-                    mac_arm_url  : "",
-                    mac_intel_url: "",
-                    win_arm_url  : "",
-                    win_intel_url: ""
+    RcDTReqDto rcDTReqDto = [
+            mac_arm_url  : "",
+            mac_intel_url: "",
+            win_arm_url  : "",
+            win_intel_url: ""
 
-            ]
-            String appName = "RingCentral"
-            cmdServerService.installRcDT(rcDTReqDto, appName) // appName 可以不传, 默认为"RingCentral", 当安装其他 brand 时, 需要指定值
-        })
-    }
-    ParallelUtil.execute(install_closures)
+    ]
+    // 3 为容错值, 当安装失败机器数小于等于此值时, 不会抛出异常,
+    // 失败机器从申请机器中移出且用 'lock-by-issue-${JOB_NAME}' 锁住
+    // "RingCentral" 为 APP_NAME
+    nodeLockResDto = JupiterWrapper.installElectron(rcDTReqDto, nodeLockResDto, 3, "RingCentral")
 
     // 执行 e2e 框架, 输出报告等...
+    // 如何决定执行线程数? 根据 { nodeLockResDto.list.size() 大小 * 系数 } 得出, 由各个框架自己决定
+    
 
 } catch (Exception e) {
     println(e)
 } finally {
-    // kill Chrome, RingCentral 相关进程
-    List<Closure> kill_closures = []
-    for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
-        CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
-        kill_closures.add({
-            cmdServerService.killProcess('Chrome')
-            cmdServerService.killProcess("${AppName}")
-        })
-    }
-    ParallelUtil.execute(kill_closures)
+    // kill Chrome, RingCentral 相关进程(可自定义)
+    JupiterWrapper.killProcesses(nodeLockResDto, ["Chrome", "RingCentral"])
 
     // 删除临时文件目录
-    if (nodeLockResDto != null) {
-        try {
-            for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
-                CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
-                cmdServerService.cleanTmpFile()
-            }
-        } catch (e) {
-            println("cleanTmpFile failed")
-        }
-    }
+    JupiterWrapper.cleanTmpFile(nodeLockResDto)
+    
     // job abort 或者发生异常时, 释放资源锁
-    if (nodeLockResDto != null) {
-        try {
-            sfService.deleteNodeLock(nodeLockResDto.uuid)
-        } catch (e) {
-            println("deleteNodeLock ${nodeLockResDto.uuid} failed")
-        }
-    }
+    JupiterWrapper.deleteNodeLock(nodeLockResDto)
 }
 ```

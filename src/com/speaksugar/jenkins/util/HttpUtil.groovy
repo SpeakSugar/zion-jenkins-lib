@@ -28,7 +28,7 @@ class HttpUtil {
 
             String data_json = JsonOutput.toJson(data)
             httpPost.setEntity(new StringEntity(data_json, ContentType.APPLICATION_JSON))
-            println("POST ${url} ${data_json}")
+            println("[ZION-JENKINS-LIB] POST ${url} ${data_json}")
             HttpResponse response = httpClient.execute(httpPost)
             int statusCode = response.getStatusLine().statusCode
             String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8")
