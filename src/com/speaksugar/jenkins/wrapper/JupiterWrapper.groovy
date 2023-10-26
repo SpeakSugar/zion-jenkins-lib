@@ -5,11 +5,25 @@ import com.speaksugar.jenkins.cmdserver.model.RcDTReqDto
 import com.speaksugar.jenkins.exception.ZionJenkinsException
 import com.speaksugar.jenkins.global.GlobalVars
 import com.speaksugar.jenkins.selenium.SfService
+import com.speaksugar.jenkins.selenium.model.NodeDto
 import com.speaksugar.jenkins.selenium.model.NodeLockReqDto
 import com.speaksugar.jenkins.selenium.model.NodeLockResDto
 import com.speaksugar.jenkins.util.ParallelUtil
 
 class JupiterWrapper {
+
+    static NodeLockResDto createNodeLock(NodeLockReqDto nodeLockReqDto, Integer faultTolerant) {
+        SfService sfService = new SfService(GlobalVars.SF_HUB_URL)
+        List<NodeDto> nodeDtos = sfService.getNodeDtos(nodeLockReqDto)
+        Integer expectCount = nodeLockReqDto.list.get(0).count
+        Integer actualCount = nodeDtos.size()
+        if (expectCount - actualCount <= faultTolerant) {
+            nodeLockReqDto.list.get(0).count = actualCount
+            return sfService.createNodeLock(nodeLockReqDto)
+        } else {
+            throw new ZionJenkinsException("[ZION-JENKINS-LIB] create node lock failed, expect count = ${expectCount}, actual count = ${actualCount}")
+        }
+    }
 
     // appName 可以不传, 默认为"RingCentral", 当安装其他 brand 时, 需要指定值
     static NodeLockResDto installElectron(RcDTReqDto rcDTReqDto,
@@ -29,7 +43,7 @@ class JupiterWrapper {
             List<String> ips = e.message.findAll(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/).unique()
             List<Object> excludeIps = new ArrayList<>()
             if (ips.size() > faultTolerant) {
-                throw new ZionJenkinsException("[ZION-JENKINS-LIB] install electron failed, ${ips.size()} > ${faultTolerant}")
+                throw new ZionJenkinsException("[ZION-JENKINS-LIB] install electron failed, failed machines ${ips.size()} > ${faultTolerant}")
             }
             for (String ip : ips) {
                 excludeIps.add([ip: ip, count: 1])

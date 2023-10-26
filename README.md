@@ -65,7 +65,9 @@ try {
                     ]
             ]
     ]
-    nodeLockResDto = sfService.createNodeLock(nodeLockReqDto)
+    
+    // 0 为容错值, 当申请机器数大于等于(实际机器数 + 此值)时, 不会抛出异常
+    nodeLockResDto = JupiterWrapper.createNodeLock(nodeLockReqDto, 0)
 
     // 安装 Jupiter Desktop
     RcDTReqDto rcDTReqDto = [
