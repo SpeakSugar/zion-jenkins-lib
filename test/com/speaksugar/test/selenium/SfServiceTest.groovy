@@ -1,6 +1,7 @@
 package com.speaksugar.test.selenium
 
 import com.speaksugar.jenkins.selenium.SfService
+import com.speaksugar.jenkins.selenium.model.NodeDto
 import com.speaksugar.jenkins.selenium.model.NodeLockReqDto
 import com.speaksugar.jenkins.selenium.model.NodeLockResDto
 import groovy.json.JsonOutput
@@ -15,7 +16,7 @@ class SfServiceTest {
                 name: "Jasmine-webinar-test",
                 list: [
                         [
-                                "ip": "10.32.57.28",
+                                "ip"   : "10.32.57.28",
                                 "count": 1
                         ]
                 ]
@@ -36,6 +37,20 @@ class SfServiceTest {
         String uuid = "jeffries.yu-169"
         SfService sfService = new SfService("http://10.74.1.239:5555")
         sfService.deleteNodeLock(uuid)
+    }
+
+    @Test
+    void getNodeDtos() {
+        SfService sfService = new SfService("http://127.0.0.1:5555")
+        sfService.createNodeLock([
+                name: 'fxxk',
+                list: [[ip: '10.32.47.163', count: 1], [ip: '10.32.56.179', count: 1]]
+        ] as NodeLockReqDto)
+        List<NodeDto> nodeDtos = sfService.getNodeDtos([
+                name: 'fxxk2',
+                list: [[ ip: '10.32.47.163', count: 1], [ip: '10.32.56.179', count: 1], [ip: '10.32.36.79', count: 1]]
+        ] as NodeLockReqDto)
+        println(JsonOutput.toJson(nodeDtos))
     }
 
     @Test

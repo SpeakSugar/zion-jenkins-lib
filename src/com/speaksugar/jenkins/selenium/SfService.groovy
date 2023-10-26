@@ -1,6 +1,7 @@
 package com.speaksugar.jenkins.selenium
 
 import com.speaksugar.jenkins.global.GlobalVars
+import com.speaksugar.jenkins.selenium.model.NodeDto
 import com.speaksugar.jenkins.selenium.model.NodeLockReqDto
 import com.speaksugar.jenkins.selenium.model.NodeLockResDto
 import com.speaksugar.jenkins.util.HttpUtil
@@ -14,6 +15,10 @@ class SfService {
     SfService(String url) {
         this.url = url
         this.jenkins = GlobalVars.jenkins
+    }
+
+    List<NodeDto> getNodeDtos(NodeLockReqDto nodeLockReqDto) {
+        return HttpUtil.post("${this.url}/nodeDtos", nodeLockReqDto) as List<NodeDto>
     }
 
     NodeLockResDto createNodeLock(NodeLockReqDto nodeLockReqDto) {
