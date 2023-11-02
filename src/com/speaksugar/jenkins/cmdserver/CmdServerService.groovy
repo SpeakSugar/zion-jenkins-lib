@@ -25,9 +25,14 @@ class CmdServerService {
         return HttpUtil.get(new URIBuilder("${this.url}/arch"))
     }
 
+    String getHomeDir() {
+        return HttpUtil.post("${this.url}/cmd", [cmd: 'echo $HOME'])
+    }
+
     void installRcDT(RcDTReqDto rcDTReqDto, String appName = "RingCentral") {
         String os = getOs()
         String arch = getArch()
+        String homeDir = getHomeDir()
         if (OS.MAC == os) {
             String appUrl = arch == "intel" ? rcDTReqDto.mac_intel_url : rcDTReqDto.mac_arm_url
             String rm_cmd = "sudo rm -rf ~/Downloads/rc.pkg"
@@ -53,7 +58,7 @@ class CmdServerService {
             } catch (Exception ignored) {
                 // sometimes can't open app after installed
             }
-            HttpUtil.post("${this.url}/cmd", [cmd: "sudo rm -rf '/Users/rcadmin/Library/Application Support/${appName}'"])
+            HttpUtil.post("${this.url}/cmd", [cmd: "sudo rm -rf '${homeDir}/Library/Application Support/${appName}'"])
         }
         if (OS.WIN == os) {
             // windows need uninstall app before
