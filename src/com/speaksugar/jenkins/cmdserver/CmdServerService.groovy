@@ -53,6 +53,7 @@ class CmdServerService {
             } catch (Exception ignored) {
                 // sometimes can't open app after installed
             }
+            HttpUtil.post("${this.url}/cmd", [cmd: "sudo rm -rf '/Users/rcadmin/Library/Application Support/${appName}'"])
         }
         if (OS.WIN == os) {
             // windows need uninstall app before
