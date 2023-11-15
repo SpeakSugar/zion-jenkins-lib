@@ -29,6 +29,26 @@ class CmdServerService {
         return HttpUtil.post("${this.url}/cmd", [cmd: 'echo $HOME'])
     }
 
+    void restartNode() {
+        String os = getOs()
+        if (OS.MAC == os) {
+            HttpUtil.post("${this.url}/cmd", [cmd: 'sudo reboot', timeout: 50e3])
+            RetryUtil.retry({
+                HttpUtil.post("${this.url}/cmd", [cmd: "echo test"])
+            }, 3, 60000)
+        }
+        if (OS.WIN == os) {
+            try {
+                HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
+            } catch (Exception ignored2) {
+                // throw e when win system is shutdown before return msg
+            }
+            RetryUtil.retry({
+                HttpUtil.post("${this.url}/cmd", [cmd: "echo test"])
+            }, 3, 60000)
+        }
+    }
+
     void installRcDT(RcDTReqDto rcDTReqDto, String appName = "RingCentral") {
         String os = getOs()
         String arch = getArch()
@@ -46,10 +66,7 @@ class CmdServerService {
             try {
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             } catch(Exception ignored) {
-                HttpUtil.post("${this.url}/cmd", [cmd: 'sudo reboot', timeout: 50e3])
-                RetryUtil.retry({
-                    HttpUtil.post("${this.url}/cmd", [cmd: "echo test"])
-                }, 3, 60000)
+                restartNode()
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             }
             Thread.sleep(10000)
@@ -75,14 +92,7 @@ class CmdServerService {
                  }
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             } catch (Exception ignored) {
-                try {
-                    HttpUtil.post("${this.url}/cmd", [cmd: 'shutdown /r', timeout: 50e3])
-                } catch (Exception ignored2) {
-                    // throw e when win system is shutdown before return msg
-                }
-                RetryUtil.retry({
-                    HttpUtil.post("${this.url}/cmd", [cmd: "echo test"])
-                }, 3, 60000)
+                restartNode()
                 killProcess("${appName}.exe")
                 uninstallRcDT(appName)
                 if(rcDTReqDto.need_download) {

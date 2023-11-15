@@ -76,6 +76,18 @@ class JupiterWrapper {
         ParallelUtil.execute(kill_closures)
     }
 
+    static restartNodes(NodeLockResDto nodeLockResDto) {
+        if (nodeLockResDto == null) {
+            return
+        }
+        List<Closure> restart_closures = []
+        for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+            CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
+            restart_closures.add({ cmdServerService.restartNode() })
+        }
+        ParallelUtil.execute(restart_closures)
+    }
+
     static cleanTmpFile(NodeLockResDto nodeLockResDto) {
         if (nodeLockResDto == null) {
             return
