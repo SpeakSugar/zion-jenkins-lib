@@ -27,6 +27,7 @@ import com.speaksugar.jenkins.cmdserver.CmdServerService
 import com.speaksugar.jenkins.blockbuster.BlockBusterService
 import com.speaksugar.jenkins.selenium.model.NodeLockReqDto
 import com.speaksugar.jenkins.selenium.model.NodeLockResDto
+import com.speaksugar.jenkins.selenium.model.LockRes
 import com.speaksugar.jenkins.blockbuster.model.CiReqDto
 import com.speaksugar.jenkins.blockbuster.model.CiResDto
 import com.speaksugar.jenkins.cmdserver.model.RcDTReqDto
@@ -89,7 +90,7 @@ try {
     // 更新 blockbuster api 
     BlockBusterService blockBusterService = new BlockBusterService("http://itop-xmn.lab.nordigy.ru:1389")
     blockBusterService.batchDeleteCi('xxx/xxx/xxx') // 删除这个 uri 和 uri 下所有子项
-    for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+    for (LockRes lockRes : nodeLockResDto.list) {
         blockBusterService.addCi([
                 // 需要把 lockRes 转成 ciReqDto 对象
         ])
