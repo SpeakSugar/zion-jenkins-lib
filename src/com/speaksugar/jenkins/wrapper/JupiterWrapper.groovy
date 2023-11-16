@@ -8,7 +8,7 @@ import com.speaksugar.jenkins.selenium.SfService
 import com.speaksugar.jenkins.selenium.model.NodeDto
 import com.speaksugar.jenkins.selenium.model.NodeLockReqDto
 import com.speaksugar.jenkins.selenium.model.NodeLockResDto
-import com.speaksugar.jenkins.selenium.model.NodeLockResDto.LockRes
+import com.speaksugar.jenkins.selenium.model.LockRes
 import com.speaksugar.jenkins.util.ParallelUtil
 import com.speaksugar.jenkins.util.LogUtil
 
