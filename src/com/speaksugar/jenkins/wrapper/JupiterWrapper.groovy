@@ -8,6 +8,7 @@ import com.speaksugar.jenkins.selenium.SfService
 import com.speaksugar.jenkins.selenium.model.NodeDto
 import com.speaksugar.jenkins.selenium.model.NodeLockReqDto
 import com.speaksugar.jenkins.selenium.model.NodeLockResDto
+import com.speaksugar.jenkins.selenium.model.NodeLockResDto.LockRes
 import com.speaksugar.jenkins.util.ParallelUtil
 import com.speaksugar.jenkins.util.LogUtil
 
@@ -32,7 +33,7 @@ class JupiterWrapper {
                                           Integer faultTolerant,
                                           String appName = "RingCentral") {
         List<Closure> install_closures = []
-        for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+        for (LockRes lockRes : nodeLockResDto.list) {
             CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
             install_closures.add({ cmdServerService.installRcDT(rcDTReqDto, appName) })
         }
@@ -64,7 +65,7 @@ class JupiterWrapper {
             return
         }
         List<Closure> kill_closures = []
-        for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+        for (LockRes lockRes : nodeLockResDto.list) {
             CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
             for (String pName : pNames) {
                 String _pName = pName
@@ -81,7 +82,7 @@ class JupiterWrapper {
             return
         }
         List<Closure> restart_closures = []
-        for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+        for (LockRes lockRes : nodeLockResDto.list) {
             CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
             restart_closures.add({ cmdServerService.restartNode() })
         }
@@ -93,7 +94,7 @@ class JupiterWrapper {
             return
         }
         try {
-            for (NodeLockResDto.LockRes lockRes : nodeLockResDto.list) {
+            for (LockRes lockRes : nodeLockResDto.list) {
                 CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
                 cmdServerService.cleanTmpFile()
             }
