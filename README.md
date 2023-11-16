@@ -19,6 +19,7 @@ jdk 17 或以上
 </dependency>
 ```
 
+### Selenium-Federation 资源整合
 ```groovy
 import com.speaksugar.jenkins.global.GlobalVars
 import com.speaksugar.jenkins.selenium.SfService

@@ -58,7 +58,13 @@ class CmdServerService {
             String rm_cmd = "sudo rm -rf ~/Downloads/rc.pkg"
             String download_cmd = "curl -s \"${appUrl}\" > ~/Downloads/rc.pkg"
             String install_cmd = "sudo installer -verbose -pkg ~/Downloads/rc.pkg -target /"
-            String kill_cmd = "kill -9 \$(ps -ef | grep rc.pkg | awk '{print \$2}' | awk 'NR==1')"
+            String pkill_installer_cmd = "pkill Install"
+            String kill_app_cmd = "kill -9 \$(ps -ef | grep rc.pkg | awk '{print \$2}' | awk 'NR==1')"
+            try {
+                HttpUtil.post("${this.url}/cmd", [cmd: pkill_installer_cmd])
+            } catch (Exception ignored) {
+                // if not exist process, it will throw exception
+            }
             if(rcDTReqDto.need_download) {
                 HttpUtil.post("${this.url}/cmd", [cmd: rm_cmd])
                 HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
@@ -71,7 +77,7 @@ class CmdServerService {
             }
             Thread.sleep(10000)
             try {
-                HttpUtil.post("${this.url}/cmd", [cmd: kill_cmd])
+                HttpUtil.post("${this.url}/cmd", [cmd: kill_app_cmd])
             } catch (Exception ignored) {
                 // sometimes can't open app after installed
             }
