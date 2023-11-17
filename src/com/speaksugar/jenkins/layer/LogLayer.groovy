@@ -1,8 +1,8 @@
-package com.speaksugar.jenkins.util
+package com.speaksugar.jenkins.layer
 
 import com.speaksugar.jenkins.global.GlobalVars
 
-class LogUtil {
+class LogLayer {
 
     static info(String msg) {
         if (GlobalVars.jenkins != null) {

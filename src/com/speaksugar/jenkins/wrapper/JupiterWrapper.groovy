@@ -10,7 +10,7 @@ import com.speaksugar.jenkins.selenium.model.NodeLockReqDto
 import com.speaksugar.jenkins.selenium.model.NodeLockResDto
 import com.speaksugar.jenkins.selenium.model.LockRes
 import com.speaksugar.jenkins.util.ParallelUtil
-import com.speaksugar.jenkins.util.LogUtil
+import com.speaksugar.jenkins.layer.LogLayer
 
 class JupiterWrapper {
 
@@ -41,7 +41,7 @@ class JupiterWrapper {
             ParallelUtil.execute(install_closures)
             return nodeLockResDto
         } catch (Exception e) {
-            LogUtil.info("[ZION-JENKINS-LIB] install electron err: ${e.message}")
+            LogLayer.info("[ZION-JENKINS-LIB] install electron err: ${e.message}")
             List<String> ips = e.message.findAll(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/).unique()
             List<Object> excludeIps = new ArrayList<>()
             if (ips.size() > faultTolerant) {
@@ -98,9 +98,9 @@ class JupiterWrapper {
                 CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
                 cmdServerService.cleanTmpFile()
             }
-            LogUtil.info("[ZION-JENKINS-LIB] cleanTmpFile success")
+            LogLayer.info("[ZION-JENKINS-LIB] cleanTmpFile success")
         } catch (e) {
-            LogUtil.info("[ZION-JENKINS-LIB] cleanTmpFile failed")
+            LogLayer.info("[ZION-JENKINS-LIB] cleanTmpFile failed")
         }
     }
 
@@ -111,9 +111,9 @@ class JupiterWrapper {
         try {
             SfService sfService = new SfService(GlobalVars.SF_HUB_URL)
             sfService.deleteNodeLock(nodeLockResDto.uuid)
-            LogUtil.info("[ZION-JENKINS-LIB] deleteNodeLock ${nodeLockResDto.uuid} success")
+            LogLayer.info("[ZION-JENKINS-LIB] deleteNodeLock ${nodeLockResDto.uuid} success")
         } catch (e) {
-            LogUtil.info("[ZION-JENKINS-LIB] deleteNodeLock ${nodeLockResDto.uuid} failed")
+            LogLayer.info("[ZION-JENKINS-LIB] deleteNodeLock ${nodeLockResDto.uuid} failed")
         }
     }
 }

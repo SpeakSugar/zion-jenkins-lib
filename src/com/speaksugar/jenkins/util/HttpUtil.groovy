@@ -1,6 +1,7 @@
 package com.speaksugar.jenkins.util
 
 import com.speaksugar.jenkins.exception.HttpUtilException
+import com.speaksugar.jenkins.layer.LogLayer
 import groovy.json.JsonException
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurperClassic
@@ -28,7 +29,7 @@ class HttpUtil {
 
             String data_json = JsonOutput.toJson(data)
             httpPost.setEntity(new StringEntity(data_json, ContentType.APPLICATION_JSON))
-            LogUtil.info("[ZION-JENKINS-LIB] POST ${url} ${data_json}")
+            LogLayer.info("[ZION-JENKINS-LIB] POST ${url} ${data_json}")
             HttpResponse response = httpClient.execute(httpPost)
             int statusCode = response.getStatusLine().statusCode
             String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8")
