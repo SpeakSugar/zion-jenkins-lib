@@ -20,7 +20,7 @@ class JupiterWrapper {
         Integer expectCount = nodeLockReqDto.list.get(0).count
         Integer actualCount = nodeDtos.size()
         if (expectCount - actualCount <= faultTolerant) {
-            nodeLockReqDto.list.get(0).count = actualCount
+            expectCount >= actualCount ? (nodeLockReqDto.list.get(0).count = actualCount) : (nodeLockReqDto.list.get(0).count = expectCount)
             return sfService.createNodeLock(nodeLockReqDto)
         } else {
             throw new ZionJenkinsException("[ZION-JENKINS-LIB] create node lock failed, expect count = ${expectCount}, actual count = ${actualCount}")

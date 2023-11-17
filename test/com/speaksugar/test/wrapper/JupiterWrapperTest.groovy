@@ -10,4 +10,16 @@ class JupiterWrapperTest {
         List<String> ips = eMsg.findAll(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)
         println(ips.unique())
     }
+
+    @Test
+    void countTest() {
+        Integer expectCount = 5
+        Integer actualCount = 6
+        Integer faultTolerant = 1
+        Integer count = 0
+        if (expectCount - actualCount <= faultTolerant) {
+            expectCount >= actualCount ? (count = actualCount) : (count = expectCount)
+        }
+        println("count = ${count}")
+    }
 }
