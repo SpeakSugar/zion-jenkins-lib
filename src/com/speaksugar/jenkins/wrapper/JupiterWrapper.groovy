@@ -4,12 +4,12 @@ import com.speaksugar.jenkins.cmdserver.CmdServerService
 import com.speaksugar.jenkins.cmdserver.model.RcDTReqDto
 import com.speaksugar.jenkins.exception.ZionJenkinsException
 import com.speaksugar.jenkins.global.GlobalVars
+import com.speaksugar.jenkins.layer.ParallelLayer
 import com.speaksugar.jenkins.selenium.SfService
 import com.speaksugar.jenkins.selenium.model.NodeDto
 import com.speaksugar.jenkins.selenium.model.NodeLockReqDto
 import com.speaksugar.jenkins.selenium.model.NodeLockResDto
 import com.speaksugar.jenkins.selenium.model.LockRes
-import com.speaksugar.jenkins.util.ParallelUtil
 import com.speaksugar.jenkins.layer.LogLayer
 
 class JupiterWrapper {
@@ -38,7 +38,7 @@ class JupiterWrapper {
             install_closures.add({ cmdServerService.installRcDT(rcDTReqDto, appName) })
         }
         try {
-            ParallelUtil.execute(install_closures)
+            ParallelLayer.execute(install_closures)
             return nodeLockResDto
         } catch (Exception e) {
             LogLayer.info("[ZION-JENKINS-LIB] install electron err: ${e.message}")
@@ -74,7 +74,7 @@ class JupiterWrapper {
                 })
             }
         }
-        ParallelUtil.execute(kill_closures)
+        ParallelLayer.execute(kill_closures)
     }
 
     static restartNodes(NodeLockResDto nodeLockResDto) {
@@ -86,7 +86,7 @@ class JupiterWrapper {
             CmdServerService cmdServerService = new CmdServerService("http://${lockRes.ip}:7777")
             restart_closures.add({ cmdServerService.restartNode() })
         }
-        ParallelUtil.execute(restart_closures)
+        ParallelLayer.execute(restart_closures)
     }
 
     static cleanTmpFile(NodeLockResDto nodeLockResDto) {
