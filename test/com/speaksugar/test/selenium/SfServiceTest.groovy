@@ -54,6 +54,12 @@ class SfServiceTest {
     }
 
     @Test
+    void isUpgradeable() {
+        SfService sfService = new SfService("http://10.74.1.239:5555")
+        println("isUpgradeable = ${sfService.isUpgradeable()}")
+    }
+
+    @Test
     void testContains() {
         println("In-Webinar-Test-In-Webinar-Chrome-Daily-Jasmine-1698026812733".contains("jeffries.yu-1"))
     }

@@ -47,4 +47,13 @@ class SfService {
         return "Delete Success"
     }
 
+    Boolean isUpgradeable() {
+        List<NodeLockResDto> nodeLockResDtos = HttpUtil.get(new URIBuilder("${this.url}/nodeLock")) as List<NodeLockResDto>
+        for (NodeLockResDto nodeLockResDto : nodeLockResDtos) {
+            if (!nodeLockResDto.uuid.contains("used-by") && !nodeLockResDto.uuid.contains("lock-by")) {
+                return false
+            }
+        }
+        return true
+    }
 }
