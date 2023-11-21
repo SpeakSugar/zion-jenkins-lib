@@ -12,6 +12,14 @@ class BaseTest {
     }
 
     @Test
+    void trimTest() {
+        String fxxk = "fxxk\n"
+        println("fxxk = ${fxxk}, xxxx")
+        fxxk = fxxk.trim()
+        println("fxxk = ${fxxk}, xxxx")
+    }
+
+    @Test
     void arrayTest() {
         def arr = ["a1", "a2", "a3"]
         println(arr.size())
