@@ -70,7 +70,6 @@ class CmdServerService {
                 HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
             }
             HttpUtil.post("${this.url}/cmd", [cmd: "sudo rm -rf '${homeDir}/Library/Application Support/${appName}'"])
-            HttpUtil.post("${this.url}/cmd", [cmd: "sudo chmod -R 777 '${homeDir}/Library/Application Support'"])
             try {
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             } catch(Exception ignored) {
