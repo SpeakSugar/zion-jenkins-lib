@@ -26,7 +26,7 @@ class CmdServerService {
     }
 
     String getHomeDir() {
-        return HttpUtil.post("${this.url}/cmd", [cmd: 'echo $HOME'])
+        return (HttpUtil.post("${this.url}/cmd", [cmd: 'echo $HOME']) as String).trim()
     }
 
     void restartNode() {
