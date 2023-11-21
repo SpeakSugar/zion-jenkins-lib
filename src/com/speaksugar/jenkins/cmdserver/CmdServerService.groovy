@@ -33,6 +33,7 @@ class CmdServerService {
         String os = getOs()
         if (OS.MAC == os) {
             HttpUtil.post("${this.url}/cmd", [cmd: 'sudo reboot', timeout: 50e3])
+            Thread.sleep(30000)
             RetryUtil.retry({
                 HttpUtil.post("${this.url}/cmd", [cmd: "echo test"])
             }, 3, 60000)
@@ -43,6 +44,7 @@ class CmdServerService {
             } catch (Exception ignored2) {
                 // throw e when win system is shutdown before return msg
             }
+            Thread.sleep(30000)
             RetryUtil.retry({
                 HttpUtil.post("${this.url}/cmd", [cmd: "echo test"])
             }, 3, 60000)
@@ -65,6 +67,7 @@ class CmdServerService {
             } catch (Exception ignored) {
                 // if not exist process, it will throw exception
             }
+            killProcess("${appName}")
             if(rcDTReqDto.need_download) {
                 HttpUtil.post("${this.url}/cmd", [cmd: rm_cmd])
                 HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
