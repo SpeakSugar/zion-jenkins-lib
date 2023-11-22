@@ -138,7 +138,7 @@ class CmdServerService {
     void killProcess(String pName) {
         String os = getOs()
         if (OS.MAC == os) {
-            String cmd = "ps -ef | grep ${pName} | grep -v grep | awk '{print \$2}'"
+            String cmd = "ps -ef | grep '${pName}' | grep -v grep | awk '{print \$2}'"
             String result = HttpUtil.post("${this.url}/cmd", [cmd: cmd])
             List<String> pids = result.split('\n')
             for (String pid : pids) {
