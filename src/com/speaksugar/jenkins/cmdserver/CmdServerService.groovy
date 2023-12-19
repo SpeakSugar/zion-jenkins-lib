@@ -31,12 +31,16 @@ class CmdServerService {
 
     void restartNode() {
         String os = getOs()
+        int maxRetryTime = 3
+        if (this.url.contains('10.32.47.163')) {
+            maxRetryTime = 5
+        }
         if (OS.MAC == os) {
             HttpUtil.post("${this.url}/cmd", [cmd: 'sudo reboot', timeout: 50e3])
             Thread.sleep(30000)
             RetryUtil.retry({
                 HttpUtil.post("${this.url}/cmd", [cmd: "echo test"])
-            }, 3, 60000)
+            }, maxRetryTime, 60000)
         }
         if (OS.WIN == os) {
             try {
@@ -47,7 +51,7 @@ class CmdServerService {
             Thread.sleep(30000)
             RetryUtil.retry({
                 HttpUtil.post("${this.url}/cmd", [cmd: "echo test"])
-            }, 3, 60000)
+            }, maxRetryTime, 60000)
         }
     }
 
