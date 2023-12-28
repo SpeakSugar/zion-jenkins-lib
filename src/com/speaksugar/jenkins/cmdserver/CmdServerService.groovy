@@ -32,7 +32,7 @@ class CmdServerService {
     void restartNode() {
         String os = getOs()
         int maxRetryTime = 3
-        if (this.url.contains('10.32.47.163')) {
+        if (this.url.contains('10.32.47.163') || this.url.contains('10.32.56.196')) {
             maxRetryTime = 5
         }
         if (OS.MAC == os) {
