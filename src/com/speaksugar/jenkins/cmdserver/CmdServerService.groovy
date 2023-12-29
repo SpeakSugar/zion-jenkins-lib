@@ -3,6 +3,7 @@ package com.speaksugar.jenkins.cmdserver
 import com.speaksugar.jenkins.cmdserver.constant.OS
 import com.speaksugar.jenkins.cmdserver.model.RcDTReqDto
 import com.speaksugar.jenkins.global.GlobalVars
+import com.speaksugar.jenkins.layer.LogLayer
 import com.speaksugar.jenkins.util.HttpUtil
 import com.speaksugar.jenkins.util.RetryUtil
 import org.apache.http.client.utils.URIBuilder
@@ -50,7 +51,8 @@ class CmdServerService {
             }
             Thread.sleep(30000)
             RetryUtil.retry({
-                HttpUtil.post("${this.url}/cmd", [cmd: "echo test"])
+                String result = HttpUtil.post("${this.url}/cmd", [cmd: "wmic process get processId,commandline | findstr /c:\"cmds\" | findstr /v findstr"])
+                LogLayer.info("result = ${result}")
             }, maxRetryTime, 60000)
         }
     }
