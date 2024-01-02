@@ -30,11 +30,16 @@ class HttpUtil {
             String data_json = JsonOutput.toJson(data)
             httpPost.setEntity(new StringEntity(data_json, ContentType.APPLICATION_JSON))
             LogLayer.info("[ZION-JENKINS-LIB] POST ${url} ${data_json}")
-            HttpResponse response = httpClient.execute(httpPost)
+            HttpResponse response
+            try {
+                response = httpClient.execute(httpPost)
+            } catch (Exception e) {
+                throw new HttpUtilException("[ZION-JENKINS-LIB] POST ${url} ${data_json} failed", e)
+            }
             int statusCode = response.getStatusLine().statusCode
             String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8")
             if (statusCode >= 300) {
-                throw new HttpUtilException("status code = ${statusCode}, res msg = ${responseBody}")
+                throw new HttpUtilException("[ZION-JENKINS-LIB] status code = ${statusCode}, res msg = ${responseBody}")
             }
             try {
                 return new JsonSlurperClassic().parseText(responseBody)
@@ -50,11 +55,16 @@ class HttpUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault()
         try {
             HttpGet httpGet = new HttpGet(uriBuilder.build())
-            HttpResponse response = httpClient.execute(httpGet)
+            HttpResponse response
+            try {
+                response = httpClient.execute(httpGet)
+            } catch(e) {
+                throw new HttpUtilException("[ZION-JENKINS-LIB] GET ${uriBuilder.toString()} failed", e)
+            }
             int statusCode = response.getStatusLine().statusCode
             String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8")
             if (statusCode >= 300) {
-                throw new HttpUtilException("status code = ${statusCode}, res msg = ${responseBody}")
+                throw new HttpUtilException("[ZION-JENKINS-LIB] status code = ${statusCode}, res msg = ${responseBody}")
             }
             try {
                 return new JsonSlurperClassic().parseText(responseBody)

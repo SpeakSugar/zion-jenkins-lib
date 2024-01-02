@@ -3,13 +3,14 @@ package com.speaksugar.test.cmdserver
 import com.speaksugar.jenkins.cmdserver.CmdServerService
 import com.speaksugar.jenkins.cmdserver.model.RcDTReqDto
 import com.speaksugar.jenkins.util.HttpUtil
+import org.apache.http.client.utils.URIBuilder
 import org.junit.Test
 
 class CmdServerServiceTest {
 
     @Test
     void cmdsTest() {
-        def result = HttpUtil.post("http://10.74.144.88:7777/cmd", [cmd: 'echo test'])
+        def result = HttpUtil.post("http://10.74.144.161:7777/cmd", [cmd: 'wmic process get processId,commandline | findstr /c:\"cmds\" | findstr /v findstr'])
         println(result)
     }
 
@@ -76,5 +77,11 @@ class CmdServerServiceTest {
     void cleanTmpFile() {
         CmdServerService cmdServerService = new CmdServerService("http://10.32.63.97:7777")
         cmdServerService.cleanTmpFile()
+    }
+
+    @Test
+    void URIBuilder() {
+        def builder = new URIBuilder("http://10.32.35.220:7777/os")
+        println("uri = ${builder.toString()}")
     }
 }

@@ -6,4 +6,8 @@ class HttpUtilException extends RuntimeException {
         super(msg);
     }
 
+    HttpUtilException(String msg, Exception e) {
+        super(msg, e);
+    }
+
 }
