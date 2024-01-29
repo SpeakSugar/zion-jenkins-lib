@@ -15,6 +15,12 @@ class CmdServerServiceTest {
     }
 
     @Test
+    void cmdsTest2() {
+        def result = HttpUtil.post("http://10.32.56.9:7777/cmd", [cmd: 'sudo rm -rf ~/Downloads/rc.pkg'])
+        println(result)
+    }
+
+    @Test
     void getOs() {
         CmdServerService cmdServerService = new CmdServerService("http://10.32.59.112:7777")
         String os = cmdServerService.getOs()
