@@ -76,7 +76,7 @@ class CmdServerService {
             killProcess("${appName}")
             if(rcDTReqDto.need_download) {
                 HttpUtil.post("${this.url}/cmd", [cmd: rm_cmd])
-                HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
+                HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 600e3])
             }
             HttpUtil.post("${this.url}/cmd", [cmd: "sudo rm -rf '${homeDir}/Library/Application Support/${appName}'"])
             try {
@@ -103,7 +103,7 @@ class CmdServerService {
             try {
                 uninstallRcDT(appName)
                  if(rcDTReqDto.need_download) {
-                    HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
+                    HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 600e3])
                  }
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
             } catch (Exception ignored) {
@@ -112,7 +112,7 @@ class CmdServerService {
                 uninstallRcDT(appName)
                 if(rcDTReqDto.need_download) {
                     RetryUtil.retry({
-                        HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 300e3])
+                        HttpUtil.post("${this.url}/cmd", [cmd: download_cmd, timeout: 600e3])
                     }, 3, 60000)
                 }
                 HttpUtil.post("${this.url}/cmd", [cmd: install_cmd, timeout: 180e3])
