@@ -51,7 +51,7 @@ class CmdServerService {
             }
             Thread.sleep(30000)
             RetryUtil.retry({
-                String result = HttpUtil.post("${this.url}/cmd", [cmd: "wmic process get processId,commandline | findstr /c:\"cmds\" | findstr /v findstr"])
+                String result = HttpUtil.post("${this.url}/cmd", [cmd: "wmic process get processId,commandline | findstr pm2 | findstr /v findstr"])
                 LogLayer.info("result = ${result}")
             }, maxRetryTime, 60000)
         }

@@ -10,13 +10,20 @@ class CmdServerServiceTest {
 
     @Test
     void cmdsTest() {
-        def result = HttpUtil.post("http://10.74.144.161:7777/cmd", [cmd: 'wmic process get processId,commandline | findstr /c:\"cmds\" | findstr /v findstr'])
+        def result = HttpUtil.post("http://10.74.144.87:7777/cmd", [cmd: 'wmic process get processId,commandline | findstr pm2 | findstr /v findstr'])
         println(result)
     }
 
     @Test
     void cmdsTest2() {
         def result = HttpUtil.post("http://10.32.56.9:7777/cmd", [cmd: 'sudo rm -rf ~/Downloads/rc.pkg'])
+        println(result)
+    }
+
+    @Test
+    void cmdsTest3() {
+        HttpUtil.post("http://10.32.35.172:7777/cmd", [cmd: 'sudo rm -rf ~/Downloads/rc.pkg'])
+        def result = HttpUtil.post("http://10.32.35.172:7777/cmd", [cmd: 'curl -s "https://electron.fiji.gliprc.com/downloads-all/master/24.1.10/rc/8928-rc-noupdate-d3e497f3e/for-downloading/RingCentral-24.1.10-8928-noupdate-mac-x64.pkg" > ~/Downloads/rc.pkg'])
         println(result)
     }
 
