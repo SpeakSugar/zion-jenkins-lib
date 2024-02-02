@@ -28,6 +28,12 @@ class CmdServerServiceTest {
     }
 
     @Test
+    void cmdsTest4() {
+        def result = HttpUtil.post("http://10.32.57.130:7777/cmd", [cmd: 'msiexec /i \"%USERPROFILE%\\Downloads\\RingCentral.msi\"', timeout: 180e3])
+        println(result)
+    }
+
+    @Test
     void getOs() {
         CmdServerService cmdServerService = new CmdServerService("http://10.32.59.112:7777")
         String os = cmdServerService.getOs()
